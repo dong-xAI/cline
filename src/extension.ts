@@ -460,22 +460,6 @@ export function activate(context: vscode.ExtensionContext) {
                 }),
         )
 
-	context.subscriptions.push(
-		vscode.commands.registerCommand("cline.generateCodeFromFigmaLink", async () => {
-			const controller = WebviewProvider.getAllInstances()[0]?.controller
-
-			if (controller) {
-				await controller.generateCodeFromFigmaLink()
-			} else {
-				const outputChannel = vscode.window.createOutputChannel("Cline Figma")
-				const tempController = new Controller(context, outputChannel, () => Promise.resolve(true))
-
-				await tempController.generateCodeFromFigmaLink()
-				outputChannel.dispose()
-			}
-		}),
-	)
-
 	return createClineAPI(outputChannel, sidebarWebview.controller)
 }
 
