@@ -42,7 +42,8 @@
 	"activationEvents": [
 		"onLanguage",
 		"onStartupFinished",
-		"workspaceContains:evals.env"
+		"workspaceContains:evals.env",
+		"onCommand:cline.generateCodeFromFigmaLink"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {

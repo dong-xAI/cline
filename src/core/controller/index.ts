@@ -1442,13 +1442,13 @@ export class Controller {
 
 	// Git commit message generation
 
-	async generateGitCommitMessage() {
-		try {
-			// Check if there's a workspace folder open
-			const cwd = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
-			if (!cwd) {
-				vscode.window.showErrorMessage("No workspace folder open")
-				return
+        async generateGitCommitMessage() {
+                try {
+                        // Check if there's a workspace folder open
+                        const cwd = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
+                        if (!cwd) {
+                                vscode.window.showErrorMessage("No workspace folder open")
+                                return
 			}
 
 			// Get the git diff
@@ -1539,9 +1539,38 @@ Commit message:`
 			)
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : String(error)
-			vscode.window.showErrorMessage(`Failed to generate commit message: ${errorMessage}`)
-		}
-	}
+                        vscode.window.showErrorMessage(`Failed to generate commit message: ${errorMessage}`)
+                }
+        }
+
+        async generateCodeFromFigmaLink() {
+                try {
+                        const cwd = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
+                        if (!cwd) {
+                                vscode.window.showErrorMessage("No workspace folder open")
+                                return
+                        }
+
+                        const figmaUrl = await vscode.window.showInputBox({ prompt: "Enter Figma file URL" })
+                        if (!figmaUrl) {
+                                return
+                        }
+
+                        await vscode.window.withProgress(
+                                {
+                                        location: vscode.ProgressLocation.Notification,
+                                        title: "Generating code from Figma...",
+                                        cancellable: false,
+                                },
+                                async () => {
+                                        await generateFromFigmaLink(figmaUrl, cwd)
+                                },
+                        )
+                } catch (error) {
+                        const errorMessage = error instanceof Error ? error.message : String(error)
+                        vscode.window.showErrorMessage(`Failed to generate code: ${errorMessage}`)
+                }
+        }
 
 	async generateCodeFromFigmaLink() {
 		try {
