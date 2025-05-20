@@ -1572,5 +1572,43 @@ Commit message:`
                 }
         }
 
+	async generateCodeFromFigmaLink() {
+		try {
+			const cwd = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
+			if (!cwd) {
+				vscode.window.showErrorMessage("No workspace folder open")
+				return
+			}
+
+			const figmaUrl = await vscode.window.showInputBox({ prompt: "Enter Figma file URL" })
+			if (!figmaUrl) {
+				return
+			}
+
+			const generatedFiles = await vscode.window.withProgress(
+				{
+					location: vscode.ProgressLocation.Notification,
+					title: "Generating code from Figma...",
+					cancellable: false,
+				},
+				async () => {
+					return await generateFromFigmaLink(figmaUrl, cwd)
+				},
+			)
+
+			vscode.window.showInformationMessage(
+				`Generated ${generatedFiles.length} file${generatedFiles.length === 1 ? "" : "s"} from Figma`,
+			)
+
+			if (generatedFiles.length > 0) {
+				const doc = await vscode.workspace.openTextDocument(generatedFiles[0])
+				await vscode.window.showTextDocument(doc)
+			}
+		} catch (error) {
+			const errorMessage = error instanceof Error ? error.message : String(error)
+			vscode.window.showErrorMessage(`Failed to generate code: ${errorMessage}`)
+		}
+	}
+
 	// dev
 }
