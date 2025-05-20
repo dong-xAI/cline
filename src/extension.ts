@@ -425,24 +425,40 @@ export function activate(context: vscode.ExtensionContext) {
 	)
 
 	// Register the generateGitCommitMessage command handler
-	context.subscriptions.push(
-		vscode.commands.registerCommand("cline.generateGitCommitMessage", async () => {
-			// Get the controller from any instance, without activating the view
-			const controller = WebviewProvider.getAllInstances()[0]?.controller
+        context.subscriptions.push(
+                vscode.commands.registerCommand("cline.generateGitCommitMessage", async () => {
+                        // Get the controller from any instance, without activating the view
+                        const controller = WebviewProvider.getAllInstances()[0]?.controller
 
-			if (controller) {
-				// Call the controller method to generate commit message
-				await controller.generateGitCommitMessage()
-			} else {
-				// Create a temporary controller just for this operation
-				const outputChannel = vscode.window.createOutputChannel("Cline Commit Generator")
-				const tempController = new Controller(context, outputChannel, () => Promise.resolve(true))
+                        if (controller) {
+                                // Call the controller method to generate commit message
+                                await controller.generateGitCommitMessage()
+                        } else {
+                                // Create a temporary controller just for this operation
+                                const outputChannel = vscode.window.createOutputChannel("Cline Commit Generator")
+                                const tempController = new Controller(context, outputChannel, () => Promise.resolve(true))
 
-				await tempController.generateGitCommitMessage()
-				outputChannel.dispose()
-			}
-		}),
-	)
+                                await tempController.generateGitCommitMessage()
+                                outputChannel.dispose()
+                        }
+                }),
+        )
+
+        context.subscriptions.push(
+                vscode.commands.registerCommand("cline.generateCodeFromFigmaLink", async () => {
+                        const controller = WebviewProvider.getAllInstances()[0]?.controller
+
+                        if (controller) {
+                                await controller.generateCodeFromFigmaLink()
+                        } else {
+                                const outputChannel = vscode.window.createOutputChannel("Cline Figma")
+                                const tempController = new Controller(context, outputChannel, () => Promise.resolve(true))
+
+                                await tempController.generateCodeFromFigmaLink()
+                                outputChannel.dispose()
+                        }
+                }),
+        )
 
 	return createClineAPI(outputChannel, sidebarWebview.controller)
 }
