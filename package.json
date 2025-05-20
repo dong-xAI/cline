@@ -126,6 +126,11 @@
 				"title": "Generate Commit Message with Cline",
 				"category": "Cline",
 				"icon": "$(robot)"
+			},
+			{
+				"command": "cline.generateCodeFromFigmaLink",
+				"title": "Generate Code from Figma Link",
+				"category": "Cline"
 			}
 		],
 		"keybindings": [
@@ -231,6 +236,9 @@
 				{
 					"command": "cline.generateGitCommitMessage",
 					"when": "scmProvider == git"
+				},
+				{
+					"command": "cline.generateCodeFromFigmaLink"
 				}
 			]
 		},
