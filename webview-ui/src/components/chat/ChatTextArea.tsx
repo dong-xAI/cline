@@ -1028,6 +1028,19 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 			updateHighlights()
 		}, [inputValue, handleInputChange, updateHighlights])
 
+		const handleDesignLinkButtonClick = useCallback(() => {
+			textAreaRef.current?.focus()
+			const value = "请在此输入设计稿的链接地址："
+			const event = {
+				target: {
+					value,
+					selectionStart: value.length,
+				},
+			} as React.ChangeEvent<HTMLTextAreaElement>
+			handleInputChange(event)
+			updateHighlights()
+		}, [handleInputChange, updateHighlights])
+
 		// Use an effect to detect menu close
 		useEffect(() => {
 			if (prevShowModelSelector.current && !showModelSelector) {
@@ -1638,6 +1651,21 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 									<ButtonContainer>
 										<span
 											className="codicon codicon-device-camera flex items-center"
+											style={{ fontSize: "14px", marginBottom: -3 }}
+										/>
+									</ButtonContainer>
+								</VSCodeButton>
+							</Tooltip>
+							<Tooltip tipText="图生代码">
+								<VSCodeButton
+									data-testid="design-link-button"
+									appearance="icon"
+									aria-label="Design to Code"
+									onClick={handleDesignLinkButtonClick}
+									style={{ padding: "0px 0px", height: "20px" }}>
+									<ButtonContainer>
+										<span
+											className="codicon codicon-link flex items-center"
 											style={{ fontSize: "14px", marginBottom: -3 }}
 										/>
 									</ButtonContainer>
