@@ -31,6 +31,7 @@ import { secondsToMs } from "@utils/time"
 import { GlobalFileNames } from "@core/storage/disk"
 import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js"
 import { ExtensionMessage } from "@shared/ExtensionMessage"
+import { DEFAULT_MCP_SERVERS } from "./defaultMcpServers"
 
 // Default timeout for internal MCP data requests in milliseconds; is not the same as the user facing timeout stored as DEFAULT_MCP_TIMEOUT_SECONDS
 const DEFAULT_REQUEST_TIMEOUT_MS = 5000
@@ -111,14 +112,7 @@ export class McpHub {
 		const mcpSettingsFilePath = path.join(await this.getSettingsDirectoryPath(), GlobalFileNames.mcpSettings)
 		const fileExists = await fileExistsAtPath(mcpSettingsFilePath)
 		if (!fileExists) {
-			await fs.writeFile(
-				mcpSettingsFilePath,
-				`{
-  "mcpServers": {
-    
-  }
-}`,
-			)
+			await fs.writeFile(mcpSettingsFilePath, JSON.stringify({ mcpServers: DEFAULT_MCP_SERVERS }, null, 2))
 		}
 		return mcpSettingsFilePath
 	}
@@ -146,6 +140,8 @@ export class McpHub {
 				vscode.window.showErrorMessage("Invalid MCP settings schema.")
 				return undefined
 			}
+
+			await this.ensureDefaultServers(result.data)
 
 			return result.data
 		} catch (error) {
@@ -178,6 +174,20 @@ export class McpHub {
 		const settings = await this.readAndValidateMcpSettingsFile()
 		if (settings) {
 			await this.updateServerConnections(settings.mcpServers)
+		}
+	}
+
+	private async ensureDefaultServers(settings: z.infer<typeof McpSettingsSchema>): Promise<void> {
+		let updated = false
+		for (const [name, config] of Object.entries(DEFAULT_MCP_SERVERS)) {
+			if (!settings.mcpServers[name]) {
+				settings.mcpServers[name] = config as any
+				updated = true
+			}
+		}
+		if (updated) {
+			const settingsPath = await this.getMcpSettingsFilePath()
+			await fs.writeFile(settingsPath, JSON.stringify(settings, null, 2))
 		}
 	}
 
