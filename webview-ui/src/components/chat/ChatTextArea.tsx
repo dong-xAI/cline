@@ -1636,6 +1636,21 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								</VSCodeButton>
 							</Tooltip>
 
+							<Tooltip tipText="图生代码">
+								<VSCodeButton
+									data-testid="design-link-button"
+									appearance="icon"
+									aria-label="Design to Code"
+									onClick={handleDesignLinkButtonClick}
+									style={{ padding: "0px 0px", height: "20px" }}>
+									<ButtonContainer>
+										<span
+											className="codicon codicon-coffee flex items-center"
+											style={{ fontSize: "14px", marginBottom: -3 }}
+										/>
+									</ButtonContainer>
+								</VSCodeButton>
+							</Tooltip>
 							<Tooltip tipText="Add Images">
 								<VSCodeButton
 									data-testid="images-button"
@@ -1651,21 +1666,6 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 									<ButtonContainer>
 										<span
 											className="codicon codicon-device-camera flex items-center"
-											style={{ fontSize: "14px", marginBottom: -3 }}
-										/>
-									</ButtonContainer>
-								</VSCodeButton>
-							</Tooltip>
-							<Tooltip tipText="图生代码">
-								<VSCodeButton
-									data-testid="design-link-button"
-									appearance="icon"
-									aria-label="Design to Code"
-									onClick={handleDesignLinkButtonClick}
-									style={{ padding: "0px 0px", height: "20px" }}>
-									<ButtonContainer>
-										<span
-											className="codicon codicon-link flex items-center"
 											style={{ fontSize: "14px", marginBottom: -3 }}
 										/>
 									</ButtonContainer>
